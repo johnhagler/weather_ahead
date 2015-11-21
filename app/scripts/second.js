@@ -1,6 +1,8 @@
 function addThroughPoint(e) {
 	e.preventDefault();
 	
+	$('#through-example').show();
+
 	var new_through = $.parseHTML($('#through-template').html());
 	
 	$('#throughs').append(new_through);
