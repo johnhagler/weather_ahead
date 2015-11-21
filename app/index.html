@@ -31,11 +31,6 @@
     
     <div class="container">
       <div class="header">
-        <ul class="nav nav-pills pull-right">
-          <li class="active"><a href="#">Home</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Contact</a></li>
-        </ul>
         <h3 class="text-muted">Weather Ahead</h3>
       </div>
 
@@ -44,6 +39,7 @@
           <div id="map">map goes here</div>
         </div>
         <div class="col-md-4">
+
           <form action="#" id="search-form">
             
             <div class="form-group">
@@ -53,7 +49,7 @@
 
             <div id="throughs"></div>
 
-            <div class="form-group text-right">
+            <div class="text-right">
               <small id="through-example" class="text-muted" style="display:none">e.g. "Oura, AL" or "Hwy 151 and Blue Ridge Parkway"</small>
               <a id="add-through" class="btn btn-default btn-sm control-label" tabindex="-1">
                 <span class="glyphicon glyphicon-plus"></span>
@@ -69,6 +65,12 @@
             <div class="form-group">
               <label for="time" class="control-label">Leaving @</label>
               <input type="datetime-local" id="time" class="form-control" step="60">
+
+              <div class="btn-group bt-group-sm" role="group">
+                <a id="sub-hour" class="btn btn-sm btn-default">- 1hr</a>
+                <a id="add-hour" class="btn btn-sm btn-default">+ 1hr</a>
+              </div>
+
             </div>
 
             <input type=submit class="btn btn-primary btn-block" value="Search"/>
@@ -76,9 +78,29 @@
 
             <script type="x-template" id="through-template">
               <div class="form-group well well-sm">
-                  <a href="#" class="remove glyphicon glyphicon-remove-circle text-danger control-label"></a>
-                  <label class="control-label">Through</label>
+                  
+                  <label class="control-label">Going through</label>
+
+
+                  <a href="#" class="remove-button btn btn-xs btn-link pull-right" tabindex="-1">
+                    <span class="glyphicon glyphicon-remove-circle text-danger"></span>
+                  </a>
+                  
+
+                  <a href="#" class="stopping-for-button btn btn-default btn-xs pull" tabindex="-1">
+                    <span class="glyphicon glyphicon-time"></span>
+                  </a>
+                
                   <input type="text" class="form-control through">
+
+                  <div class="stopping-for-container" style="display:none">
+                    <label class="control-label">Stopping for</label>
+                    <div class="input-group">
+                      <input type="number" class="form-control" id="exampleInputAmount" min="0" max="1000" step="1">
+                      <div class="input-group-addon">hr</div>
+                    </div>
+                  </div>
+
               </div>
             </script>
 
@@ -118,7 +140,8 @@
     
 
     <!-- build:js scripts/main.js -->
-    <script src="scripts/second.js"></script>
+    <script src="scripts/map.js"></script>
+    <script src="scripts/form.js"></script>
     <script src="scripts/main.js"></script>
     <!-- endbuild -->
 
