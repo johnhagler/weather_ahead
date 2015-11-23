@@ -6,6 +6,10 @@ function addThroughPoint(e) {
 	var new_through = $.parseHTML($('#through-template').html());
 	
 	$('#throughs').append(new_through);
+
+	var input = $(new_through).find('.going-through')[0];
+	addAutocomplete(input);
+
 	$(new_through).find('input').focus();
 
 	$(new_through).find('a.remove-button').click(function(e){
