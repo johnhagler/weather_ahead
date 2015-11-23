@@ -96,7 +96,7 @@
                   <div class="stopping-for-container" style="display:none">
                     <label class="control-label">Stop for</label>
                     <div class="input-group">
-                      <input type="number" class="stopping-for form-control" min="0" max="1000" step=".01">
+                      <input type="number" class="stopping-for form-control" min="0" max="1000" step=".5">
                       <div class="input-group-addon">hr</div>
                     </div>
                   </div>
@@ -119,6 +119,7 @@
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/bower_components/moment/moment.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -140,10 +141,13 @@
     
 
     <!-- build:js scripts/main.js -->
+    <script src="scripts/location.js"></script>
     <script src="scripts/map.js"></script>
     <script src="scripts/form.js"></script>
     <script src="scripts/main.js"></script>
     <!-- endbuild -->
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQdrpOnK2m84aFJZkVOZ_PbBkM7lmezgM&callback=initMap"></script>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
     <script>
@@ -152,7 +156,7 @@
       e=o.createElement(i);r=o.getElementsByTagName(i)[0];
       e.src='https://www.google-analytics.com/analytics.js';
       r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-      ga('create','UA-XXXXX-X');ga('send','pageview');
+      ga('create','UA-70482568-1');ga('send','pageview');
     </script>
   </body>
 </html>

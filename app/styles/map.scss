@@ -3,3 +3,17 @@
 	height:400px;
 	background-color:#ccc;
 }
+
+#sub-hour {
+	border-top: none;
+	border-top-left-radius: 0;	
+}
+
+#add-hour {
+	border-top: none;
+	border-top-right-radius: 0;
+}
+
+#time {
+	border-bottom-left-radius: 0;
+}
