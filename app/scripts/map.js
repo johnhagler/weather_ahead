@@ -4,7 +4,7 @@ var map,
     autocomplete,
     directionsService,
     directionsDisplay,
-    temperatureLables = [],
+    weatherMarkers = [],
     routePoints = [];
 
 (function(){
@@ -188,10 +188,30 @@ function displayRoute(origin, destination, waypoints) {
 
 function directionsChanged() {
 
-	var points = getIntervalPoints(10);
 	computeTotals(directionsDisplay.getDirections());
-	showTemperatureLables(points);
-	drawRainbowRoad(getIntervalPoints(2));
+
+	clearWeatherMarkers();
+
+	var points = getIntervalPoints(5);
+
+	var calls = [];
+	for (var i=0; i<points.length; i++) {
+		var point = points[i];
+		var call = getWeatherData(point);
+		calls.push(call);
+	}
+
+	Promise.each(calls, function(result, i) {
+		// show weather marker every 20 points or last point
+		if (i % 4 == 0 || i + 1 == points.length) {
+			addWeatherMarker(result);
+		}
+		points[i].temperature = result.currently.temperature;
+	}).then(function(){
+		drawRainbowRoad(points);	
+	});
+	
+	
 
 }
 
@@ -217,13 +237,28 @@ function computeTotals(result) {
 	$('#totals').show();
 }
 
-
-function showTemperatureLables(points) {
-
-	temperatureLables.forEach(function(label){
+function clearWeatherMarkers() {
+	weatherMarkers.forEach(function(label){
 		label.setMap(null);
 	});
+}
 
+function getWeatherData(point) {
+    
+    var lat = point.lat;
+    var lng = point.lng;
+    var time = moment(document.getElementById('time').value).add(point.duration, 'seconds').format();
+    
+    var uri = "https://api.forecast.io/forecast/e127ab25b695cae535abb09d1652cbc3/" + lat + "," + lng + "," + time;
+    return $.ajax({
+        url: uri,
+        dataType: 'jsonp'
+    });
+    
+}
+
+function addWeatherMarker(result) {
+	var icon = 'images/transparent.gif';
 	var raindrop = {
 		path: 'M406.269,10.052l-232.65,405.741c-48.889,85.779-52.665,194.85,0,286.697c79.169,138.07,255.277,185.82,393.348,106.65 c138.071-79.169,185.821-255.276,106.651-393.348L440.968,10.052C433.283-3.351,413.953-3.351,406.269,10.052z',
 		fillColor: '#5BC0DE',
@@ -234,22 +269,45 @@ function showTemperatureLables(points) {
 	    anchor: new google.maps.Point(0, 0)
 	};
 
-	points.forEach(function(point){
-		var lat_lng = {lat: point.lat, lng: point.lng};
-		var marker = new MarkerWithLabel({
-	       position: lat_lng,
-	       map: map,
-	       icon: raindrop,
-	       labelContent: "33.6°",
-	       labelAnchor: new google.maps.Point(0, 28),
-	       labelClass: "temperature-label", // the CSS class for the label
-	       labelStyle: {opacity: 0.75},
-	     });
-		temperatureLables.push(marker);
-	});
+	var precipIconScale = 0,
+		precipIntensity = result.currently.precipIntensity;
+
+	if (precipIntensity >= .002 && precipIntensity < .017) {
+		precipIconScale = .020;
+	} else if (precipIntensity >= .017 && precipIntensity < .1) {
+		precipIconScale = .023;
+	} else if (precipIntensity >= .1 && precipIntensity < .4) {	
+		precipIconScale = .026;
+	} else if (precipIntensity >= .4) {
+		precipIconScale = .030;
+	}
+
+	if (result.currently.precipType == 'rain') {
+		icon = raindrop;
+		icon.scale = precipIconScale;
+		
+		console.log(result.currently);
+	}
+
+	var current_temp = Math.round(result.currently.temperature * 10)/10;
+
+	
+	var lat_lng = {lat: result.latitude, lng: result.longitude};
+	var marker = new MarkerWithLabel({
+       position: lat_lng,
+       map: map,
+       icon: icon,
+       labelContent: current_temp + '° ' + result.currently.summary,
+       labelAnchor: new google.maps.Point(0, 28),
+       labelClass: "temperature-label", // the CSS class for the label
+       labelStyle: {opacity: 0.75},
+     });
+	weatherMarkers.push(marker);
+	
 }
 
 function drawRainbowRoad(points) {
+
 	routePoints.forEach(function(point){
 		point.setMap(null);
 	});
@@ -259,11 +317,11 @@ function drawRainbowRoad(points) {
 	for (var i=1; i<points.length; i++) {
 		var point = points[i];
 		var lat_lngB = {lat: point.lat, lng: point.lng};
+		var color = getHSLA(point.temperature);
 		var path =  new google.maps.Polyline({
 		    path: [lat_lngA,lat_lngB],
 		    geodesic: true,
-		    strokeColor: '#FF0000',
-		    strokeOpacity: 1.0,
+		    strokeColor: color,
 		    strokeWeight: 6,
 		    map: map
 		  });
@@ -274,3 +332,34 @@ function drawRainbowRoad(points) {
 
 }
 
+
+function getHSLA(t) {
+
+    var h = 0,
+        s = 100,
+        l = 50,
+        a = 1;
+    
+    
+    if (t < 10) {
+    	h = 300;
+        s = 57;
+        l = 50 + ((10 - t) * 2.5);
+        
+    } else if (t <= 100) {
+    	h = 150 * Math.cos(t / 30) + 160;
+        // if temp is between 10 and 40, modify saturation
+        if (t >= 10 && t <=40) {
+            s = (0.105 * (Math.pow(t,2))) - (3.87 * t) + 85;
+        }
+    } else {
+        l = 50 + ((100 - t) * 1.5);
+    }
+    
+    h = Math.round(h);
+    s = Math.round(s);
+    l = Math.round(l);
+
+    return 'hsla(' + h + ',' + s + '%,' + l + '%,1)';
+
+}

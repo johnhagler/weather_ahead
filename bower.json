@@ -4,7 +4,8 @@
   "dependencies": {
     "bootstrap-sass": "~3.3.5",
     "modernizr": "~2.8.3",
-    "moment": "~2.10.6"
+    "moment": "~2.10.6",
+    "bluebird": "~3.0.5"
   },
   "overrides": {
     "bootstrap-sass": {
