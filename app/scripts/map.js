@@ -220,12 +220,23 @@ function showTemperatureLables(points) {
 		label.setMap(null);
 	});
 
+	var raindrop = {
+		path: 'M406.269,10.052l-232.65,405.741c-48.889,85.779-52.665,194.85,0,286.697c79.169,138.07,255.277,185.82,393.348,106.65 c138.071-79.169,185.821-255.276,106.651-393.348L440.968,10.052C433.283-3.351,413.953-3.351,406.269,10.052z',
+		fillColor: '#5BC0DE',
+	    fillOpacity: 0.8,
+	    scale: .03,
+	    strokeColor: '#337AB7',
+	    strokeWeight: 1,
+	    anchor: new google.maps.Point(0, -22)
+	};
+
 	points.forEach(function(point){
 		var lat_lng = {lat: point.lat, lng: point.lng};
 		var marker = new MarkerWithLabel({
 	       position: lat_lng,
 	       map: map,
-	       icon: 'images/transparent.gif',
+	       //icon: 'images/transparent.gif',
+	       icon: raindrop,
 	       labelContent: "33.6°",
 	       labelAnchor: new google.maps.Point(22, 0),
 	       labelClass: "temperature-label", // the CSS class for the label
