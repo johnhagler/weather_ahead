@@ -54,20 +54,8 @@ function submitSearchForm(e) {
 		throughs = getThroughPoints(),
 		end = $('#end').val();
 
-	var res = 'Get map for \r' + '    Start: "' + start + '"\r';
+	displayRoute(start, end, throughs);
 
-	if (throughs.length > 0) {
-		res += '    Through:\r';
-	}
-
-	throughs.forEach(function(through){
-		res += '      "' + through.location + '" stop for ' + through.stopping_for + ' sec\r';
-	});
-
-	res += '    End: "' + end + '"\r';
-	res += '    At: "' + $('#time').val() +'"';
-
-	$('#map').html('<pre>' + res + '</pre>')
 
 }
 
@@ -79,7 +67,8 @@ function getThroughPoints() {
 			stopping_for_sec = stopping_for * 60 * 60;
 
 		if (through !== '') {
-			throughs.push({location:through, stopping_for: stopping_for_sec});
+			// add back stopping_for_sec
+			throughs.push({location:through});
 		}
 
 	});

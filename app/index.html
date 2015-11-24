@@ -105,6 +105,13 @@
             </script>
 
           </form>
+
+          <div id="totals" style="display:none;">
+            <p>Total Distance: <span id="total-distance"></span></p>
+            <p>Total road time: <span id="total-duration"></span></p>
+          </div>
+
+
         </div>
       </div>
       
@@ -138,16 +145,19 @@
     <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js"></script>
     <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tab.js"></script>
     <!-- endbuild -->
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQdrpOnK2m84aFJZkVOZ_PbBkM7lmezgM&libraries=places"></script>
     
 
     <!-- build:js scripts/main.js -->
+    <script src="scripts/markerwithlabel.js"></script>
     <script src="scripts/location.js"></script>
     <script src="scripts/map.js"></script>
     <script src="scripts/form.js"></script>
     <script src="scripts/main.js"></script>
     <!-- endbuild -->
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQdrpOnK2m84aFJZkVOZ_PbBkM7lmezgM&libraries=places&callback=initMap"></script>
+    
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
     <script>
