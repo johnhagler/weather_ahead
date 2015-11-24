@@ -4,7 +4,8 @@ var map,
     autocomplete,
     directionsService,
     directionsDisplay,
-    temperatureLables = [];
+    temperatureLables = [],
+    routePoints = [];
 
 (function(){
 	initMap	();
@@ -46,7 +47,9 @@ function showMap(position) {
 
 			    directionsDisplay = new google.maps.DirectionsRenderer({
 			        draggable: true,
-			        map: map
+			        map: map,
+        			suppressMarkers: true,
+        			suppressPolylines: true
 			    });
 
 			    directionsDisplay.addListener('directions_changed',directionsChanged);
@@ -81,7 +84,7 @@ function getDirections() {
 }
 
 
-function getIntervalPoints() {
+function getIntervalPoints(interval_mi) {
 
     var route = directionsDisplay.getDirections().routes[0];
 
@@ -91,7 +94,7 @@ function getIntervalPoints() {
         duration_sum = 0,
         duration_interval = 0,
         distance_sum = 0,
-        distance_interval = 16093.4,      // 10 mi
+        distance_interval = 1609.34 * interval_mi,      // 10 mi
         distance_interval_sum = 0;
 
 
@@ -185,9 +188,10 @@ function displayRoute(origin, destination, waypoints) {
 
 function directionsChanged() {
 
-	var points = getIntervalPoints();
+	var points = getIntervalPoints(10);
 	computeTotals(directionsDisplay.getDirections());
 	showTemperatureLables(points);
+	drawRainbowRoad(getIntervalPoints(2));
 
 }
 
@@ -227,7 +231,7 @@ function showTemperatureLables(points) {
 	    scale: .03,
 	    strokeColor: '#337AB7',
 	    strokeWeight: 1,
-	    anchor: new google.maps.Point(0, -22)
+	    anchor: new google.maps.Point(0, 0)
 	};
 
 	points.forEach(function(point){
@@ -235,10 +239,9 @@ function showTemperatureLables(points) {
 		var marker = new MarkerWithLabel({
 	       position: lat_lng,
 	       map: map,
-	       //icon: 'images/transparent.gif',
 	       icon: raindrop,
 	       labelContent: "33.6°",
-	       labelAnchor: new google.maps.Point(22, 0),
+	       labelAnchor: new google.maps.Point(0, 28),
 	       labelClass: "temperature-label", // the CSS class for the label
 	       labelStyle: {opacity: 0.75},
 	     });
@@ -246,5 +249,28 @@ function showTemperatureLables(points) {
 	});
 }
 
+function drawRainbowRoad(points) {
+	routePoints.forEach(function(point){
+		point.setMap(null);
+	});
 
+	var lat_lngA = {lat: points[0].lat, lng: points[0].lng};
+
+	for (var i=1; i<points.length; i++) {
+		var point = points[i];
+		var lat_lngB = {lat: point.lat, lng: point.lng};
+		var path =  new google.maps.Polyline({
+		    path: [lat_lngA,lat_lngB],
+		    geodesic: true,
+		    strokeColor: '#FF0000',
+		    strokeOpacity: 1.0,
+		    strokeWeight: 6,
+		    map: map
+		  });
+		routePoints.push(path);
+		lat_lngA = lat_lngB;
+	};
+	
+
+}
 
