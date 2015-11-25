@@ -249,7 +249,7 @@ function getWeatherData(point) {
     var lng = point.lng;
     var time = moment(document.getElementById('time').value).add(point.duration, 'seconds').format();
     
-    var uri = "https://api.forecast.io/forecast/e127ab25b695cae535abb09d1652cbc3/" + lat + "," + lng + "," + time;
+    var uri = "https://api.forecast.io/forecast/e127ab25b695cae535abb09d1652cbc3/" + lat + "," + lng + "," + time + '?exclude=minutely,hourly,daily,alerts,flags';
     return $.ajax({
         url: uri,
         dataType: 'jsonp'
