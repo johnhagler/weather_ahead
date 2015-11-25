@@ -260,7 +260,7 @@ function getWeatherData(point) {
 function addWeatherMarker(result) {
 	var icon = 'images/transparent.gif';
 	var raindrop = {
-		path: 'M406.269,10.052l-232.65,405.741c-48.889,85.779-52.665,194.85,0,286.697c79.169,138.07,255.277,185.82,393.348,106.65 c138.071-79.169,185.821-255.276,106.651-393.348L440.968,10.052C433.283-3.351,413.953-3.351,406.269,10.052z',
+		path: 'M 63.233512,197.64699 C 51.539282,195.73253 41.869592,191.77659 33.069014,185.30647 28.968213,182.2916 21.795321,175.04541 18.893878,170.9865 13.014515,162.76172 8.8848447,153.0149 7.2099095,143.41012 6.4644196,139.13517 6.4643423,127.39778 7.2097756,123.50175 8.5032835,116.74119 13.098292,104.23622 18.400759,93.046309 27.682697,73.458451 39.568863,53.115966 57.551589,26.041903 69.682998,7.7773203 71.971485,4.6272207 72.681024,5.2160987 74.058515,6.3593035 90.636499,30.968103 98.310514,43.261166 119.28103,76.854031 131.9908,102.4782 136.85268,120.96601 c 0.98919,3.76151 1.51026,11.6736 1.11465,16.92524 -2.23266,29.63802 -25.31086,54.65404 -54.828451,59.43233 -5.032132,0.81461 -15.833056,0.99007 -19.905367,0.32341 z m -5.061617,-24.10598 c -7.361078,-9.8925 -12.918868,-18.96349 -17.664236,-28.83018 -6.508771,-13.5332 -9.220161,-22.69711 -10.981137,-37.11393 -0.277355,-2.27069 -0.277355,-2.27069 -1.512832,1.51377 -4.92574,15.08831 -3.837224,28.92815 3.259497,41.44266 4.8903,8.62366 12.385239,16.49294 21.717144,22.80181 3.604678,2.43695 8.167886,5.18251 8.631886,5.19359 0.154508,0.004 -1.398132,-2.2498 -3.450322,-5.00772 z',
 		fillColor: '#5BC0DE',
 	    fillOpacity: 0.8,
 	    scale: .03,
@@ -273,13 +273,13 @@ function addWeatherMarker(result) {
 		precipIntensity = result.currently.precipIntensity;
 
 	if (precipIntensity >= .002 && precipIntensity < .017) {
-		precipIconScale = .020;
+		precipIconScale = (0*.01875) + .05;
 	} else if (precipIntensity >= .017 && precipIntensity < .1) {
-		precipIconScale = .023;
+		precipIconScale = (1*.01875) + .05;
 	} else if (precipIntensity >= .1 && precipIntensity < .4) {	
-		precipIconScale = .026;
+		precipIconScale = (2*.01875) + .05;
 	} else if (precipIntensity >= .4) {
-		precipIconScale = .030;
+		precipIconScale = (3*.01875) + .05;
 	}
 
 	if (result.currently.precipType == 'rain') {
@@ -297,13 +297,30 @@ function addWeatherMarker(result) {
        position: lat_lng,
        map: map,
        icon: icon,
-       labelContent: current_temp + '° ' + result.currently.summary,
+       labelContent: current_temp + '°',
        labelAnchor: new google.maps.Point(0, 28),
        labelClass: "temperature-label", // the CSS class for the label
        labelStyle: {opacity: 0.75},
      });
+	addInfoWindow(result, marker);
 	weatherMarkers.push(marker);
 	
+}
+
+function addInfoWindow(result, marker) {
+	var f = new ForecastIO(result);
+	var str = 'Temp: ' + f.getTemperature() + '<br>' + 
+			'Precip: ' + f.getPrecipitation() + '<br>' + 
+			'Conditions: ' + f.getConditions() + '<br>' + 
+			'Wind: ' + f.getWind() + '<br>' + 
+			'Cloud Cover: ' + f.getClouds();
+
+	var infowindow = new google.maps.InfoWindow({
+		content: str
+	});
+	marker.addListener('click', function() {
+		infowindow.open(map, marker);
+	});
 }
 
 function drawRainbowRoad(points) {
