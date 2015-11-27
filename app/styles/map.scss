@@ -27,3 +27,22 @@
 	border-radius: 3px;
 	margin-left:40px;
 }
+
+
+div#gradient-color {
+    margin-top:10px;
+    height:3px;
+    width:100%;
+    background: linear-gradient(to right, hsla(300, 57%, 75%, 1) 0%, hsla(302, 57%, 50%, 1) 10%, hsla(278, 50%, 50%, 1) 20%, hsla(241, 63%, 50%, 1) 30%, hsla(195, 98%, 50%, 1) 40%, hsla(146, 100%, 50%, 1) 50%, hsla(98, 100%, 50%, 1) 60%, hsla(56, 100%, 50%, 1) 70%, hsla(27, 100%, 50%, 1) 80%, hsla(12, 100%, 50%, 1) 90%, hsla(13, 100%, 40%, 1) 100%);
+}
+
+table#gradient-numbers {
+    width:100%;
+    margin-top:-13px;
+}
+table#gradient-numbers td {
+    font-family:'Helvetica Neue';
+    color: white;
+    font-size:16px;
+    text-shadow: -1px -1px 1px #333, 1px -1px 1px #333, -1px 1px 1px #333, 1px 1px 1px #333;
+}

@@ -37,6 +37,24 @@
       <div class="row">
         <div class="col-md-8">
           <div id="map"></div>
+          
+          <div id="gradient-color"></div>
+
+          <table id="gradient-numbers">
+              <tr>
+                  <td>&nbsp;&nbsp;</td>
+                  <td>10</td>
+                  <td>20</td>
+                  <td>30</td>
+                  <td>40</td>
+                  <td>50</td>
+                  <td>60</td>
+                  <td>70</td>
+                  <td>80</td>
+                  <td>90</td>
+              </tr>
+          </table>
+
         </div>
         <div class="col-md-4">
 
@@ -118,9 +136,66 @@
       <br>
 
       <div class="footer">
-        <p><span class="glyphicon glyphicon-heart"></span> to all Adventurers</p>
+        <div class="row">
+          <div class="col-xs-4">
+            <p>
+              <span class="glyphicon glyphicon-heart"></span> to all Adventurers
+            </p>
+          </div>
+          <div class="col-xs-4 text-center">
+            <a href="#" data-toggle="modal" data-target="#credits-modal">Credits</a>
+          </div>
+          <div class="col-xs-4 text-right">
+            <small>
+              <a href="#" data-toggle="modal" data-target="#terms-modal" class="text-muted">Terms of Use</a>
+            </small>
+          </div>
+        </div>
+        
       </div>
     </div>
+
+
+    <div id="terms-modal" class="modal fade" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+            <h4 class="modal-title">Terms of Use</h4>
+          </div>
+          <div class="modal-body">
+            YOU EXPRESSLY AGREE THAT USE OF THE SERVICES IS AT YOUR SOLE RISK. THERE IS NO WARRANTY THAT THE SERVICES WILL BE UNINTERRUPTED OR ERROR FREE; NOR DO THEY MAKE ANY WARRANTY AS TO THE RESULTS THAT MAY BE OBTAINED FROM USE OF THE SERVICES, OR FROM THE INFORMATION CONTAINED THEREIN, OR AS TO THE ACCURACY, COMPLETENESS OR RELIABILITY OF ANY INFORMATION, SERVICE OR MERCHANDISE PROVIDED THROUGH THE SERVICES. IN NO EVENT WILL COVERED PARTIES OR ANY OTHER PERSON OR ENTITY INVOLVED IN CREATING, PRODUCING OR DISTRIBUTING THE SERVICES, BE LIABLE FOR ANY DAMAGES, CLAIMS, OR INJURY, INCLUDING WITHOUT LIMITATION, DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL OR PUNITIVE DAMAGES, OR PERSONAL OR BODILY INJURY, (I) ARISING OUT OF THE USE OF, OR INABILITY TO USE, THE SERVICES, OR (II) ARISING FROM OR IN CONNECTION WITH YOUR CREATING CONTENT, BY VIDEOTAPING, PHOTOGRAPHY OR OTHERWISE, FOR SUBMISSION TO THE SERVICES, AND YOU HEREBY ASSUME ALL RISK FOR ANY DAMAGES, CLAIMS OR INJURIES.
+          </div>
+        </div>
+      </div>
+      
+    </div>
+
+    <div id="credits-modal" class="modal fade" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+            <h4 class="modal-title">Credits</h4>
+            
+          </div>
+          <div class="modal-body">
+            <p>Thanks to the following for making this project a reality!</p>
+            <ul class="list-unstyled">
+              <li>Daniel Muller</li>
+              <li>Adam and Hannah Wilson</li>
+              <li>ForecastIO</li>
+              <li>Google Maps API</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+
     
 
     <!-- build:js(.) scripts/vendor.js -->

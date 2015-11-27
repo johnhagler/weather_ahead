@@ -1,9 +1,10 @@
+ForecastIO.prototype = Object.create(ForecastIO.prototype);
+ForecastIO.prototype.constructor = ForecastIO;
+
 function ForecastIO(result) {
 	this.data = result.currently;
 }
 
-ForecastIO.prototype = Object.create(ForecastIO.prototype);
-ForecastIO.prototype.constructor = ForecastIO;
 
 
 ForecastIO.prototype.getWind = function() {
