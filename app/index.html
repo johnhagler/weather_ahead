@@ -12,6 +12,10 @@
 
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
+    <link rel="stylesheet" href="/bower_components/weather-icons/css/weather-icons.css" />
+    <link rel="stylesheet" href="/bower_components/weather-icons/css/weather-icons.min.css" />
+    <link rel="stylesheet" href="/bower_components/weather-icons/css/weather-icons-wind.css" />
+    <link rel="stylesheet" href="/bower_components/weather-icons/css/weather-icons-wind.min.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
@@ -31,7 +35,7 @@
     
     <div class="container">
       <div class="header">
-        <h3 class="text-muted">Weather Ahead</h3>
+        <h3 class="text-muted"><i class="wi wi-day-storm-showers"></i> Weather Ahead</h3> 
       </div>
 
       <div class="row">
@@ -198,11 +202,29 @@
 
     
 
+    <script type="x-template" id="info-window-template">
+    <div class="info-window-conditions">
+      <h5>
+        <i class="wi {{icon}}"></i>
+        {{getTemperature}} {{getConditions}}
+      </h5>
+      <div>
+        <i class="wi wi-strong-wind"></i> {{getWind}}<br>
+        <i class="wi wi-raindrop"></i> {{getPrecipitation}}<br>
+        <i class="wi wi-cloud"></i> {{getClouds}}
+      </div>
+      <div class="text-right text-muted">
+        <small>{{getTime}}</small>
+      </div>
+    </div>
+    </script>
+
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="/bower_components/jquery/dist/jquery.js"></script>
     <script src="/bower_components/moment/moment.js"></script>
     <script src="/bower_components/bluebird/js/browser/bluebird.js"></script>
+    <script src="/bower_components/mustache.js/mustache.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 

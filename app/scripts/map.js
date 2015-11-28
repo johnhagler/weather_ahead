@@ -289,7 +289,7 @@ function addWeatherMarker(result) {
 		console.log(result.currently);
 	}
 
-	var current_temp = Math.round(result.currently.temperature * 10)/10;
+	var current_temp = Math.round(result.currently.temperature );
 
 	
 	var lat_lng = {lat: result.latitude, lng: result.longitude};
@@ -309,14 +309,18 @@ function addWeatherMarker(result) {
 
 function addInfoWindow(result, marker) {
 	var f = new ForecastIO(result);
+
+	var s = Mustache.render($('#info-window-template').html(), f);
+
 	var str = 'Temp: ' + f.getTemperature() + '<br>' + 
 			'Precip: ' + f.getPrecipitation() + '<br>' + 
 			'Conditions: ' + f.getConditions() + '<br>' + 
 			'Wind: ' + f.getWind() + '<br>' + 
-			'Cloud Cover: ' + f.getClouds();
+			'Cloud Cover: ' + f.getClouds() + '<br>' + 
+			f.getTime();
 
 	var infowindow = new google.maps.InfoWindow({
-		content: str
+		content: s
 	});
 	marker.addListener('click', function() {
 		infowindow.open(map, marker);
@@ -380,3 +384,5 @@ function getHSLA(t) {
     return 'hsla(' + h + ',' + s + '%,' + l + '%,1)';
 
 }
+
+
