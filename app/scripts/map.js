@@ -188,22 +188,38 @@ function displayRoute(origin, destination, waypoints) {
 
 function directionsChanged() {
 
-	computeTotals(directionsDisplay.getDirections());
+	var route = new Route();
+	route.directions = directionsDisplay.getDirections().routes[0];
+	route.calculateTotals();
+
+	$('#total-distance').html(route.getTotalDistance());
+	$('#total-duration').html(route.getTotalDuration());
+	$('#totals').show();
+
 
 	clearWeatherMarkers();
-
+	clearRainbowRoad();
+ 
 	var points = getIntervalPoints(5);
-
 	var calls = [];
-	for (var i=0; i<points.length; i++) {
-		var point = points[i];
-		var call = getWeatherData(point);
-		calls.push(call);
-	}
 
+	_.each(points, function(point){
+
+		var call = ForecastIO.get({
+    					latitude: point.lat, 
+    					longitude: point.lng, 
+    					time: moment(document.getElementById('time').value).add(point.duration, 'seconds').format()
+    				});
+		calls.push(call);
+	});
+	
+
+	
 	Promise.each(calls, function(result, i) {
 		// show weather marker every 20 points or last point
+		
 		if (i % 4 == 0 || i + 1 == points.length) {
+			
 			addWeatherMarker(result);
 		}
 		points[i].temperature = result.currently.temperature;
@@ -215,46 +231,11 @@ function directionsChanged() {
 
 }
 
-
-function computeTotals(result) {
-    var total_distance = 0,
-        total_duration = 0;
-	    
-	var myroute = result.routes[0];
-	for (var i = 0; i < myroute.legs.length; i++) {
-		total_distance += myroute.legs[i].distance.value;
-		total_duration += myroute.legs[i].duration.value;
-	}
-	total_distance = Math.round(total_distance / 1609.34 * 10) / 10;
-	var hours = moment.duration(total_duration*1000).hours();
-	var minutes = moment.duration(total_duration*1000).minutes();
-	var duration_string = 
-	    (hours == 0 ? '' : hours + ' hr ' ) + 
-	    (minutes == 0 ? '' : minutes + ' min');
-
-	$('#total-distance').html(total_distance + ' mi');
-	$('#total-duration').html(duration_string);
-	$('#totals').show();
-}
-
 function clearWeatherMarkers() {
 	weatherMarkers.forEach(function(label){
 		label.setMap(null);
 	});
-}
-
-function getWeatherData(point) {
-    
-    var lat = point.lat;
-    var lng = point.lng;
-    var time = moment(document.getElementById('time').value).add(point.duration, 'seconds').format();
-    
-    var uri = "https://api.forecast.io/forecast/e127ab25b695cae535abb09d1652cbc3/" + lat + "," + lng + "," + time + '?exclude=minutely,hourly,daily,alerts,flags';
-    return $.ajax({
-        url: uri,
-        dataType: 'jsonp'
-    });
-    
+	weatherMarkers.length = 0;
 }
 
 function addWeatherMarker(result) {
@@ -327,11 +308,14 @@ function addInfoWindow(result, marker) {
 	});
 }
 
-function drawRainbowRoad(points) {
-
+function clearRainbowRoad() {
 	routePoints.forEach(function(point){
 		point.setMap(null);
 	});
+	routePoints.length = 0;
+}
+
+function drawRainbowRoad(points) {
 
 	var lat_lngA = {lat: points[0].lat, lng: points[0].lng};
 
