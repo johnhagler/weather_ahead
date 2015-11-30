@@ -100,7 +100,11 @@ function addTime(milliseconds) {
 		document.getElementById('time').valueAsNumber + milliseconds;	
 }
 
-
+function updateTotals(route) {
+	$('#total-distance').html(route.getTotalDistance());
+	$('#total-duration').html(route.getTotalDuration());
+	$('#totals').show();
+}
 
 
 

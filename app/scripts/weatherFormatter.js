@@ -121,7 +121,9 @@ ForecastIO.prototype.icons = {
 	'fog': 'wi-forecast-io-fog',
 	'cloudy': 'wi-forecast-io-cloudy',
 	'day-cloudy': 'wi-forecast-io-partly-cloudy-day',
+	'partly-cloudy-day': 'wi-forecast-io-partly-cloudy-day',
 	'night-cloudy': 'wi-forecast-io-partly-cloudy-night',
+	'partly-cloudy-night': 'wi-forecast-io-partly-cloudy-night',
 	'hail': 'wi-forecast-io-hail',
 	'thunderstorm': 'wi-forecast-io-thunderstorm',
 	'tornado': 'wi-forecast-io-tornado: tornado'

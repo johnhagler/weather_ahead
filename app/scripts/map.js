@@ -79,12 +79,7 @@ function addAutocomplete(input) {
 }
 
 
-function getDirections() {
-
-}
-
-
-function getIntervalPoints(interval_mi) {
+function getIntervalPoints(interval) {
 
     var route = directionsDisplay.getDirections().routes[0];
 
@@ -94,11 +89,15 @@ function getIntervalPoints(interval_mi) {
         duration_sum = 0,
         duration_interval = 0,
         distance_sum = 0,
-        distance_interval = 1609.34 * interval_mi,      // 10 mi
+        distance_interval = interval,
         distance_interval_sum = 0;
 
 
     lat_lngA = route.legs[0].steps[0].lat_lngs[0];
+
+
+    
+
     
     // get first data point
     points.push({
@@ -107,7 +106,6 @@ function getIntervalPoints(interval_mi) {
         duration: 0,
         distance: 0
     });
-
 
     for (var i = 0; i < route.legs.length; i++) {
         var leg = route.legs[i];
@@ -166,7 +164,7 @@ function getIntervalPoints(interval_mi) {
     });
 
     return points;
-
+t
 }
 
 function displayRoute(origin, destination, waypoints) {
@@ -192,33 +190,37 @@ function directionsChanged() {
 	route.directions = directionsDisplay.getDirections().routes[0];
 	route.calculateTotals();
 
-	$('#total-distance').html(route.getTotalDistance());
-	$('#total-duration').html(route.getTotalDuration());
-	$('#totals').show();
-
+	updateTotals(route);
 
 	clearWeatherMarkers();
 	clearRainbowRoad();
- 
-	var points = getIntervalPoints(5);
+
+
+	var points = route.extractIntervalPoints();
+
 	var calls = [];
 
-	_.each(points, function(point){
+	_.each(points, function(point, i){
 
-		var call = ForecastIO.get({
-    					latitude: point.lat, 
-    					longitude: point.lng, 
-    					time: moment(document.getElementById('time').value).add(point.duration, 'seconds').format()
-    				});
-		calls.push(call);
+		var weatherInterval = Math.ceil(points.length / 20);
+
+		if (i % weatherInterval == 0 || i + 1 == points.length) {
+			var call = ForecastIO.get({
+	    					latitude: point.lat, 
+	    					longitude: point.lng, 
+	    					time: moment($('#time')[0].value).add(point.duration, 'seconds').format()
+	    				});
+			calls.push(call);
+		}
+		
 	});
 	
 
 	
 	Promise.each(calls, function(result, i) {
-		// show weather marker every 20 points or last point
 		
-		if (i % 4 == 0 || i + 1 == points.length) {
+		//show forecast icon every other point
+		if (i % 2 == 0 || i + 1 == points.length) {
 			
 			addWeatherMarker(result);
 		}
@@ -230,6 +232,7 @@ function directionsChanged() {
 	
 
 }
+
 
 function clearWeatherMarkers() {
 	weatherMarkers.forEach(function(label){
@@ -267,7 +270,6 @@ function addWeatherMarker(result) {
 		icon = raindrop;
 		icon.scale = precipIconScale;
 		
-		console.log(result.currently);
 	}
 
 	var current_temp = Math.round(result.currently.temperature );
@@ -293,13 +295,6 @@ function addInfoWindow(result, marker) {
 
 	var s = Mustache.render($('#info-window-template').html(), f);
 
-	var str = 'Temp: ' + f.getTemperature() + '<br>' + 
-			'Precip: ' + f.getPrecipitation() + '<br>' + 
-			'Conditions: ' + f.getConditions() + '<br>' + 
-			'Wind: ' + f.getWind() + '<br>' + 
-			'Cloud Cover: ' + f.getClouds() + '<br>' + 
-			f.getTime();
-
 	var infowindow = new google.maps.InfoWindow({
 		content: s
 	});
@@ -319,14 +314,20 @@ function drawRainbowRoad(points) {
 
 	var lat_lngA = {lat: points[0].lat, lng: points[0].lng};
 
+	var hsla = '';
+
 	for (var i=1; i<points.length; i++) {
 		var point = points[i];
 		var lat_lngB = {lat: point.lat, lng: point.lng};
-		var color = getHSLA(point.temperature);
+
+		if (point.temperature) {
+			hsla = getHSLA(point.temperature);
+		}
+		
 		var path =  new google.maps.Polyline({
 		    path: [lat_lngA,lat_lngB],
 		    geodesic: true,
-		    strokeColor: color,
+		    strokeColor: hsla,
 		    strokeWeight: 6,
 		    map: map
 		  });
