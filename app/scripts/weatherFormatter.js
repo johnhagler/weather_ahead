@@ -78,7 +78,6 @@ ForecastIO.prototype.getPrecipitation = function() {
 	
 	var probability = '',
 		type = '',
-		intensity = '',
 		accumulation = '';
 
 	if (this.data.precipProbability) {
@@ -87,9 +86,6 @@ ForecastIO.prototype.getPrecipitation = function() {
 	if (this.data.precipType) {
 		type = this.data.precipType;
 	}
-	if (this.data.intensity) {
-		intensity = this.data.precipIntensity + ' in/hr';
-	}
 	if (this.data.accumulation) {
 		accumulation = this.data.accumulation + ' in';
 	}
@@ -97,7 +93,7 @@ ForecastIO.prototype.getPrecipitation = function() {
 	if (this.data.precipProbability == 0) {
 		return 'None';
 	} else {
-		return [probability,type,intensity,accumulation].join(' ');	
+		return [probability,type,accumulation].join(' ');	
 	}
 
 	
