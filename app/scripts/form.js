@@ -20,22 +20,6 @@ function addThroughPoint(e) {
 		}
 	});
 
-	$(new_through).find('a.stopping-for-button').click(function(e){
-		e.preventDefault();
-		var el = $(this).parent().find('.stopping-for-container');
-		if ($(this).parent().find('.stopping-for-container:visible').length > 0) {
-			$(el).hide();
-			$(this).removeClass('active');
-			$(el).parent().find('input.stopping-for').prop('disabled',true);
-			$(el).parent().find('input.going-through').focus();
-		} else {
-			$(el).show();
-			$(el).parent().find('input.stopping-for').prop('disabled',false);
-			$(el).parent().find('input.stopping-for').focus();
-			$(this).addClass('active');
-		}
-	});
-
 	return false;
 }
 
@@ -63,27 +47,13 @@ function getThroughPoints() {
 	var throughs = [];
 	$('.going-through').each(function(){
 		var through = $(this).val();		
-		var stopping_for = getStoppingFor($(this)),
-			stopping_for_sec = stopping_for * 60 * 60;
 
 		if (through !== '') {
-			// add back stopping_for_sec
 			throughs.push({location:through});
 		}
 
 	});
 	return throughs;
-}
-
-function getStoppingFor(going_through) {
-	var sf = $(going_through).parent().find('input.stopping-for'),
-		value = 0;
-	if ($(sf).prop('disabled')) {
-		// input is disabled
-	} else {
-		value = $(sf).val();
-	}
-	return value;
 }
 
 
