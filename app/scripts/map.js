@@ -200,9 +200,9 @@ function directionsChanged() {
 
 	var calls = [];
 
-	_.each(points, function(point, i){
+  var weatherInterval = Math.ceil(points.length / 20);
 
-		var weatherInterval = Math.ceil(points.length / 20);
+	_.each(points, function(point, i){
 
 		if (i % weatherInterval == 0 || i + 1 == points.length) {
 			var call = ForecastIO.get({
@@ -215,18 +215,25 @@ function directionsChanged() {
 		
 	});
 	
-
+  var tempPointsCounter = 0;
 	
 	Promise.each(calls, function(result, i) {
 		
 		//show forecast icon every other point
-		if (i % 2 == 0 || i + 1 == points.length) {
-			
+		if (i % 2 == 0 || i + 1 == calls.length) {
 			addWeatherMarker(result);
 		}
-		points[i].temperature = result.currently.temperature;
+    
+    
+    
+		if (points[tempPointsCounter]) {
+       points[tempPointsCounter].temperature = result.currently.temperature;  
+    }
+    tempPointsCounter += weatherInterval;
+    
+
 	}).then(function(){
-		drawRainbowRoad(points);	
+		drawRainbowRoad(points);
 	});
 	
 	
@@ -357,7 +364,7 @@ function drawRainbowRoad(points) {
 
 	var hsla = '';
 
-	for (var i=1; i<points.length; i++) {
+	for (var i=0; i<points.length; i++) {
 		var point = points[i];
 		var lat_lngB = {lat: point.lat, lng: point.lng};
 

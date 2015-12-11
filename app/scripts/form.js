@@ -40,6 +40,8 @@ function submitSearchForm(e) {
 
 	displayRoute(start, end, throughs);
 
+	$('#map')[0].scrollIntoView();
+
 
 }
 
