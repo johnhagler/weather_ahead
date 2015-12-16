@@ -5,13 +5,18 @@ var map,
     directionsService,
     directionsDisplay,
     weatherMarkers = [],
-    routePoints = [];
+    routePoints = [],
+    zIndex = 0;
 
 (function(){
 	initMap	();
 });
 
 function initMap() {
+  
+  adjustMapSize();
+  zIndex = google.maps.Marker.MAX_ZINDEX;
+
 	geocoder = new google.maps.Geocoder;
 	navigator.geolocation.getCurrentPosition(showMap);
     
@@ -324,6 +329,7 @@ function addWeatherMarker(result) {
 
 	
 	var lat_lng = {lat: result.latitude, lng: result.longitude};
+
 	var marker = new MarkerWithLabel({
        position: lat_lng,
        map: map,
@@ -331,7 +337,7 @@ function addWeatherMarker(result) {
        labelContent: current_temp + '°',
        labelAnchor: new google.maps.Point(0, 28),
        labelClass: "temperature-label", // the CSS class for the label
-       labelStyle: {opacity: 0.75},
+       labelStyle: {opacity: 0.75}
      });
 	addInfoWindow(result, marker);
 	weatherMarkers.push(marker);
@@ -346,7 +352,9 @@ function addInfoWindow(result, marker) {
 	var infowindow = new google.maps.InfoWindow({
 		content: s
 	});
+
 	marker.addListener('click', function() {
+    infowindow.setZIndex(zIndex++);
 		infowindow.open(map, marker);
 	});
 }
@@ -418,4 +426,13 @@ function getHSLA(t) {
 
 }
 
+function adjustMapSize() {
+  var windowHeight = window.innerHeight,
+      mapHeight = $('#map').innerHeight();
 
+  if (mapHeight - 80 > windowHeight) {
+    $('#map').css('height',windowHeight - 80 + 'px');
+  } else {
+    $('#map').css('height','400px');
+  }
+}

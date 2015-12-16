@@ -6,12 +6,26 @@
     <meta name="description" content="Show the weather conditions along a route as you'll be travelling.">
     <meta name="keywords" content="weather, temperature, temp, travel, drive, route, directions, road, conditions, rain, snow, motorcycle">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
-    <!--
-    <link rel="shortcut icon" href="/favicon.ico">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    -->
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
 
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
@@ -40,19 +54,18 @@
     
     <div class="container">
       <div class="header">
-        <h3 class="text-muted"><i class="wi wi-day-storm-showers"></i> Weather Ahead</h3>   
+        <h3 class="text-muted">
+          <i class="wi wi-day-storm-showers"></i>
+          Weather Ahead
+          <a href='' id="search" class="pull-right text-muted hidden-lg hidden-md hidden-sm">
+            <i class="glyphicon glyphicon-search"></i>
+          </a>
+        </h3>   
       </div>
 
       <div class="row">
         <div class="col-md-8" id="map-container">
-          <div id="totals" style="display:none;" class="row">
-            <div class="col-sm-6">
-              Total Distance: <b id="total-distance"></b>
-            </div>
-            <div class="col-sm-6">
-              Total road time: <b id="total-duration"></b>
-            </div>
-          </div>
+                      
           <div id="map"></div>
           
           <div id="gradient-color"></div>
@@ -71,6 +84,10 @@
                   <td>90</td>
               </tr>
           </table>
+          <div class="pull-right">
+            <b id="total-distance"></b>
+            <b id="total-duration" style="margin-left:1em;"></b>
+          </div>
 
         </div>
         <div class="col-md-4">
@@ -85,7 +102,7 @@
             <div id="throughs"></div>
 
             <div class="text-right">
-              <small id="through-example" class="text-muted" style="display:none">e.g. "Oura, AL" or "Hwy 151 and Blue Ridge Parkway"</small>
+              <small id="through-example" class="text-muted" style="display:none">e.g. "Ouray, CO" or "Hwy 151 and Blue Ridge Parkway"</small>
               <a id="add-through" class="btn btn-default btn-sm control-label" tabindex="-1">
                 <span class="glyphicon glyphicon-plus"></span>
                 Add through point...

@@ -78,6 +78,10 @@ function updateTotals(route) {
 	$('#totals').show();
 }
 
+function jumpToSearchForm(e) {
+  e.preventDefault();
+  $('form')[0].scrollIntoView();
+}
 
 
 
