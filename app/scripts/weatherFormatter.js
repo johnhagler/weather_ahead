@@ -18,7 +18,7 @@ ForecastIO.get = function(obj) {
 
 	    
 		var uri = "https://api.forecast.io/forecast/e127ab25b695cae535abb09d1652cbc3/" +
-					 obj.latitude + "," + obj.longitude + "," + obj.time + '?exclude=minutely,hourly,daily,alerts,flags';
+					 obj.latitude + "," + obj.longitude + "," + obj.time + '?exclude=minutely,hourly,daily,flags,alerts';
 	    return $.ajax({
 	        url: uri,
 	        dataType: 'jsonp'

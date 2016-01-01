@@ -87,3 +87,13 @@ a.remove:hover {
   height:50px;
 }
 
+#start-clear {
+  position: relative;
+  top:33px;
+  float:right;
+  &:hover {
+    color: #777777;
+  }
+}
+
+

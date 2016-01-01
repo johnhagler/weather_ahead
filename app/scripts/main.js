@@ -7,4 +7,6 @@ $(function(){
 	$('#sub-hour').click(subHour);
   $('#search').click(jumpToSearchForm);
   $(window).resize(adjustMapSize);
+  $('#start-clear').click(clearStart);
+  $('#start').keyup(showHideStartClear);
 });

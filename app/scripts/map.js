@@ -6,77 +6,78 @@ var map,
     directionsDisplay,
     weatherMarkers = [],
     routePoints = [],
-    zIndex = 0;
+    zIndex = 0,
+    google;
 
 (function(){
 	initMap	();
 });
+
 
 function initMap() {
   
   adjustMapSize();
   zIndex = google.maps.Marker.MAX_ZINDEX;
 
-	geocoder = new google.maps.Geocoder;
-	navigator.geolocation.getCurrentPosition(showMap);
-    
-    directionsService = new google.maps.DirectionsService; 
-    directionsDisplay = new google.maps.DirectionsRenderer({
-        draggable: true,
-        map: map
-    });
+  directionsService = new google.maps.DirectionsService; 
+  geocoder = new google.maps.Geocoder;
+  map = new google.maps.Map(document.getElementById('map'), {}); 
 
-    directionsDisplay.addListener('directions_changed',directionsChanged);
+  directionsDisplay = new google.maps.DirectionsRenderer({
+      map: map,
+      suppressMarkers: true,
+      suppressPolylines: true
+  });
 
+  directionsDisplay.addListener('directions_changed',directionsChanged);
+
+  addAutocomplete(document.getElementById('start'));
+  addAutocomplete(document.getElementById('end'));
+
+
+  if (window.navigator.geolocation) {
+    var options = {enableHighAccuracy: true, timeout: 5000, maximumAge: 0};
+    navigator.geolocation.getCurrentPosition(showCurrentPositionMap, null, options);
+  } else {
+    showDefaultMap(); 
+  }
+  
+  
 
 }
 
-function showMap(position) {
+function showCurrentPositionMap(position) {
+  
 	var lat_lng = {
 		lat: position.coords.latitude,
 		lng: position.coords.longitude
-		}
+		};
 
 	geocoder.geocode({
         'location': lat_lng
     }, function(results, status) {
-        if (status === google.maps.GeocoderStatus.OK) {
-            if (results) {
+        if (status === google.maps.GeocoderStatus.OK && results.length > 0) {
                 
             	$('#start').val(LocationUtil.getLocation(results));
-
-				map = new google.maps.Map(document.getElementById('map'), {
-				    center: lat_lng,
-				    zoom: 8
-		  		});	
-
-			    directionsDisplay = new google.maps.DirectionsRenderer({
-			        draggable: true,
-			        map: map,
-        			suppressMarkers: true,
-        			suppressPolylines: true
-			    });
-
-			    directionsDisplay.addListener('directions_changed',directionsChanged);
-
-		  		var start = document.getElementById('start');
-				var autocomplete_start = new google.maps.places.Autocomplete(start);
-			  	autocomplete_start.bindTo('bounds', map);
-
-			  	var end = document.getElementById('end');
-				var autocomplete_end = new google.maps.places.Autocomplete(end);
-			  	autocomplete_end.bindTo('bounds', map);
-
-            } else {
-                window.alert('No results found for orign');
-            }
+              map.setZoom(8);
+              map.setCenter(lat_lng);
+            
         } else {
-            window.alert('Geocoder failed due to: ' + status);
+            console.warn('Geocoder failed due to: ' + status);
+            showDefaultMap();
         }
     });
-
 	
 }
+
+function showDefaultMap() {
+  map.setZoom(3);
+  map.setCenter({
+    lat:  39.8282324,
+    lng: -98.5796641
+  });
+}
+
 
 function addAutocomplete(input) {
 	var autocomplete = new google.maps.places.Autocomplete(input);
@@ -335,7 +336,7 @@ function addWeatherMarker(result) {
        map: map,
        icon: icon,
        labelContent: current_temp + '°',
-       labelAnchor: new google.maps.Point(0, 28),
+       labelAnchor: new google.maps.Point(0, 14),
        labelClass: "temperature-label", // the CSS class for the label
        labelStyle: {opacity: 0.75}
      });

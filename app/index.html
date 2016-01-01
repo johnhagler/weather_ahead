@@ -94,10 +94,16 @@
 
           <form action="#" id="search-form">
             
+            
             <div class="form-group">
               <label for="start" class="control-label">Start from</label>
+              <a href="" id="start-clear" class="text-muted" style="display:none">
+                <i class="glyphicon glyphicon-remove-circle"></i>
+              </a>
               <input type="text" id="start" class="form-control" required>
+              
             </div>
+            
 
             <div id="throughs"></div>
 
@@ -146,26 +152,49 @@
 
         </div>
       </div>
+
+
       
       <br>
 
-      <div class="footer">
-        <div class="row">
-          <div class="col-xs-4">
-            <p>
-              <span class="glyphicon glyphicon-heart"></span> to all Adventurers
-            </p>
-          </div>
-          <div class="col-xs-4 text-center">
-            <a href="#" data-toggle="modal" data-target="#credits-modal">Credits</a>
-          </div>
-          <div class="col-xs-4 text-right">
-            <small>
-              <a href="#" data-toggle="modal" data-target="#terms-modal" class="text-muted">Terms of Use</a>
-            </small>
-          </div>
-        </div>
+ 
+
+      <div id="diqus" class="footer">
+        <div id="disqus_thread"></div>
+        <script>
+        /**
+        * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+        * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+        */
+        /*
+        var disqus_config = function () {
+        this.page.url = PAGE_URL; // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+        */
+        (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+
+        s.src = '//weather-ahead.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+        })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
         
+      </div>
+
+      <div class="row">
+        <div class="col-xs-4">
+          <a href="#" data-toggle="modal" data-target="#credits-modal">Credits</a>
+        </div>
+        <div class="col-xs-4"></div>
+        <div class="col-xs-4 text-right">
+          <small>
+            <a href="#" data-toggle="modal" data-target="#terms-modal" class="text-muted">Terms of Use</a>
+          </small>
+        </div>
       </div>
 
 
@@ -274,6 +303,7 @@
     <!-- endbuild -->
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQdrpOnK2m84aFJZkVOZ_PbBkM7lmezgM&libraries=places"></script>
+    <script id="dsq-count-scr" src="//weather-ahead.disqus.com/count.js" async></script>
     
 
     <!-- build:js scripts/main.js -->

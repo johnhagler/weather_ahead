@@ -83,7 +83,19 @@ function jumpToSearchForm(e) {
   $('form')[0].scrollIntoView();
 }
 
+function showHideStartClear(e) {
+  e.preventDefault();
+  if ($('#start').val()) {
+    $('#start-clear').show();
+  } else {
+    $('#start-clear').hide();
+  }
+}
 
+function clearStart(e) {
+  e.preventDefault();
+  $('#start').val('');
+}
 
 
 
