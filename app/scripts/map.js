@@ -37,13 +37,18 @@ function initMap() {
 
   if (window.navigator.geolocation) {
     var options = {enableHighAccuracy: true, timeout: 5000, maximumAge: 0};
-    navigator.geolocation.getCurrentPosition(showCurrentPositionMap, null, options);
+    navigator.geolocation.getCurrentPosition(showCurrentPositionMap, geoError, options);
   } else {
     showDefaultMap(); 
   }
   
   
 
+}
+
+function geoError(error) {
+  console.warn(error.message);
+  showDefaultMap();
 }
 
 function showCurrentPositionMap(position) {
@@ -53,15 +58,14 @@ function showCurrentPositionMap(position) {
 		lng: position.coords.longitude
 		};
 
+  map.setZoom(8);
+  map.setCenter(lat_lng);
+
 	geocoder.geocode({
         'location': lat_lng
     }, function(results, status) {
         if (status === google.maps.GeocoderStatus.OK && results.length > 0) {
-                
-            	$('#start').val(LocationUtil.getLocation(results));
-              map.setZoom(8);
-              map.setCenter(lat_lng);
-            
+        	$('#start').val(LocationUtil.getLocation(results));
         } else {
             console.warn('Geocoder failed due to: ' + status);
             showDefaultMap();
