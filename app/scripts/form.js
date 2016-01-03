@@ -20,6 +20,8 @@ function addThroughPoint(e) {
 		}
 	});
 
+  $('.clear-input').click(clearInput);
+
 	return false;
 }
 
@@ -92,9 +94,9 @@ function showHideStartClear(e) {
   }
 }
 
-function clearStart(e) {
+function clearInput(e) {
   e.preventDefault();
-  $('#start').val('');
+  $(e.target).siblings('input').val('').focus();
 }
 
 

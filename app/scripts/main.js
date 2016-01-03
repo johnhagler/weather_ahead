@@ -7,6 +7,6 @@ $(function(){
 	$('#sub-hour').click(subHour);
   $('#search').click(jumpToSearchForm);
   $(window).resize(adjustMapSize);
-  $('#start-clear').click(clearStart);
+  $('.clear-input').click(clearInput);
   $('#start').keyup(showHideStartClear);
 });
