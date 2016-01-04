@@ -6,6 +6,7 @@ before_script:
   - npm install bower -g
   - npm install
   - bower install
+  - chmod -x deploy.sh
 script:
   - grunt build
 deploy:
