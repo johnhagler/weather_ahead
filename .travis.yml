@@ -4,11 +4,10 @@ node_js:
 before_script:
   - npm install grunt-cli -g
   - npm install bower -g
-  - npm install
   - bower install
   - chmod -x deploy.sh
 script:
   - grunt build
 deploy:
   provider: script
-  script: deploy.sh
+  script: ./deploy.sh
