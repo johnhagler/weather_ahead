@@ -8,3 +8,6 @@ before_script:
   - bower install
 script:
   - grunt build
+deploy:
+  provider: script
+  script: deploy.sh
