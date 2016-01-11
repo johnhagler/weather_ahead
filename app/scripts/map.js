@@ -7,7 +7,8 @@ var map,
     weatherMarkers = [],
     routePoints = [],
     zIndex = 0,
-    google;
+    google,
+    geocodedLocation;
 
 (function(){
 	initMap	();
@@ -65,7 +66,37 @@ function showCurrentPositionMap(position) {
         'location': lat_lng
     }, function(results, status) {
         if (status === google.maps.GeocoderStatus.OK && results.length > 0) {
-        	$('#start').val(LocationUtil.getLocation(results));
+        	var location = LocationUtil.getLocation(results);
+          $('#start').val(location);
+          geocodedLocation = lat_lng;
+          geocodedLocation.location = location;
+
+          
+
+          var shadow = new google.maps.Marker({
+            position: lat_lng,
+            icon: {
+              path: google.maps.SymbolPath.CIRCLE,
+              fillColor: '#4285F4',
+              fillOpacity: 0.3,
+              scale: 12,
+              strokeWeight: 0     
+            },
+            map: map
+          });
+          var currentLocationMarker = new google.maps.Marker({
+            position: lat_lng,
+            icon: {
+              path: google.maps.SymbolPath.CIRCLE,
+              fillColor: '#4285F4',
+              fillOpacity: 1,
+              scale: 6,
+              strokeColor: '#FFFFFF',
+              strokeWeight: 1.35,
+            },
+            map: map
+          });
+
         } else {
             console.warn('Geocoder failed due to: ' + status);
             showDefaultMap();

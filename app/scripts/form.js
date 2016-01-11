@@ -40,6 +40,10 @@ function submitSearchForm(e) {
 		throughs = getThroughPoints(),
 		end = $('#end').val();
 
+  if (geocodedLocation.location == start) {
+    start = geocodedLocation.lat + ',' + geocodedLocation.lng;
+  }
+
 	displayRoute(start, end, throughs);
 
 	$('#map-container')[0].scrollIntoView();
@@ -85,21 +89,14 @@ function jumpToSearchForm(e) {
   $('form')[0].scrollIntoView();
 }
 
-function showHideStartClear(e) {
-  e.preventDefault();
-  if ($('#start').val()) {
-    $('#start-clear').show();
-  } else {
-    $('#start-clear').hide();
-  }
-}
-
 function clearInput(e) {
   e.preventDefault();
   $(e.target).siblings('input').val('').focus();
 }
 
-
+function notifyOffline() {
+  $('#offline-modal').modal('show');
+}
 
 
 
