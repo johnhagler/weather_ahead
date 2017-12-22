@@ -45,7 +45,12 @@ Route.prototype.getTotalDuration = function() {
 }
 
 Route.prototype.getTotalDistance = function() {
-	return Math.round(this.totalDistance / 1609.34 * 10) / 10 + ' mi';
+    var totalDistance = Math.round(this.totalDistance / 1609.34 * 10) / 10 + ' mi';
+    if (km) {
+        totalDistance = Math.round(this.totalDistance / 1000 * 10) / 10 + ' km';
+    }
+    return totalDistance;
+	
 }
 
 Route.prototype.extractIntervalPoints = function() {
