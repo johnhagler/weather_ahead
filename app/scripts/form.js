@@ -79,8 +79,8 @@ function addTime(milliseconds) {
 }
 
 function updateTotals(route) {
-	$('#total-distance').html(route.getTotalDistance());
-	$('#total-duration').html(route.getTotalDuration());
+	$('#total-distance').html(route.getTotalDistanceText());
+	$('#total-duration').html(route.getTotalDurationText());
 	$('#totals').show();
 }
 
@@ -98,5 +98,10 @@ function notifyOffline() {
   $('#offline-modal').modal('show');
 }
 
+function updateFlex() {
+	flex = $('#speed-flex').val() * 1;
+	$('#speed-flex-display').html(flex + 'x');
+
+}
 
 

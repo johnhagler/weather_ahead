@@ -37,7 +37,7 @@ function initMap() {
 
 
   if (window.navigator.geolocation) {
-    var options = {enableHighAccuracy: true, timeout: 5000, maximumAge: 0};
+    var options = {enableHighAccuracy: true, timeout: 60000, maximumAge: 0};
     navigator.geolocation.getCurrentPosition(showCurrentPositionMap, geoError, options);
   } else {
     showDefaultMap(); 
@@ -136,93 +136,6 @@ function addAutocomplete(input) {
 }
 
 
-function getIntervalPoints(interval) {
-
-    var route = directionsDisplay.getDirections().routes[0];
-
-    var lat_lngA, lat_lngB;
-
-    var points = [],
-        duration_sum = 0,
-        duration_interval = 0,
-        distance_sum = 0,
-        distance_interval = interval,
-        distance_interval_sum = 0;
-
-
-    lat_lngA = route.legs[0].steps[0].lat_lngs[0];
-
-
-    
-
-    
-    // get first data point
-    points.push({
-        lat: lat_lngA.lat(),
-        lng: lat_lngA.lng(),
-        duration: 0,
-        distance: 0
-    });
-
-    for (var i = 0; i < route.legs.length; i++) {
-        var leg = route.legs[i];
-
-        for (var j = 0; j < leg.steps.length; j++) {
-            var step = leg.steps[j];
-            var distance = step.distance.value;
-            var duration = step.duration.value;
-
-            var speed = 0;
-            if (duration !== 0) {
-                speed = distance / duration;
-            }
-
-
-
-            for (var k = 0; k < step.lat_lngs.length; k++) {
-                
-                lat_lngB = step.lat_lngs[k];
-                
-                var coordDistance = google.maps.geometry.spherical.computeDistanceBetween(lat_lngA, lat_lngB);
-                distance_interval_sum += coordDistance;
-                distance_sum += coordDistance;
-                
-                var coordDuration = Math.round(coordDistance / speed);
-                duration_sum += coordDuration;
-                
-
-                if (distance_interval_sum > distance_interval) {
-
-                    points.push({
-                        lat: lat_lngB.lat(),
-                        lng: lat_lngB.lng(),
-                        duration: duration_sum,
-                        distance: distance_sum
-                    });
-
-                    distance_interval_sum = 0;
-                }
-
-                
-
-                lat_lngA = lat_lngB;
-            }
-
-        }
-
-    }
-
-    // get last data point
-    points.push({
-        lat: lat_lngB.lat(),
-        lng: lat_lngB.lng(),
-        duration: duration_sum,
-        distance: distance_sum
-    });
-
-    return points;
-t
-}
 
 function displayRoute(origin, destination, waypoints) {
     directionsService = new google.maps.DirectionsService;
@@ -245,21 +158,18 @@ function directionsChanged() {
 
 	var route = new Route();
 	route.directions = directionsDisplay.getDirections().routes[0];
-	route.calculateTotals();
-
-	updateTotals(route);
-
+	
 	clearWeatherMarkers();
 	clearRainbowRoad();
-
-
-	var points = route.extractIntervalPoints();
+    
+    route.extractIntervalPoints();
+    updateTotals(route);
 
 	var calls = [];
 
-  var weatherInterval = Math.ceil(points.length / 20);
+    var weatherInterval = Math.ceil(route.points.length / 20);
 
-	_.each(points, function(point, i){
+	_.each(route.points, function(point, i){
 
 		if (i % weatherInterval == 0 || i + 1 == points.length) {
 			var call = ForecastIO.get({
@@ -283,14 +193,14 @@ function directionsChanged() {
     
     
     
-		if (points[tempPointsCounter]) {
-       points[tempPointsCounter].temperature = result.currently.temperature;  
-    }
-    tempPointsCounter += weatherInterval;
+		if (route.points[tempPointsCounter]) {
+            route.points[tempPointsCounter].temperature = result.currently.temperature;  
+            }
+        tempPointsCounter += weatherInterval;
     
 
 	}).then(function(){
-		drawRainbowRoad(points);
+		drawRainbowRoad(route.points);
 	});
 	
 	

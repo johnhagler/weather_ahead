@@ -1,42 +1,32 @@
 Route.prototype = Object.create(Route.prototype);
 Route.prototype.constructor = Route;
 
-function Route(origin, destination, waypoints) {
+function Route(origin, destination, waypoints, points) {
 	this.origin = origin || '';
 	this.destination = destination || '';
-	this.waypoints = waypoints || [];
-
+    this.waypoints = waypoints || [];
+    this.points = points || [];
 	this.directions;
-	this.interval = 0;
-	this.distance = 0;
-	this.duration = 0;
-	this.dataPoints = [];
-
-	this.totalDistance = 0;
-	this.totalDuration = 0;
 
 }
 
-Route.prototype.calculateTotals = function() {
-	if (!this.directions) {
-		throw 'directions must be set';
-	}
-
-	var totalDistance = 0,
-	    totalDuration = 0;
-	_.each(this.directions.legs,function(leg){
-		totalDistance += leg.distance.value;
-		totalDuration += leg.duration.value;
-	});
-	this.totalDistance = totalDistance;
-	this.totalDuration = totalDuration;
-	this.interval = Math.min(this.totalDistance/20, 5000);
+Route.prototype.calculateTotalRouteDistance = function() {
+    let totalRouteDistance = 0;
+    for (const leg of this.directions.legs) {
+        totalRouteDistance += leg.distance.value;
+    }
+    return totalRouteDistance;
 }
 
-Route.prototype.getTotalDuration = function() {
-    var days = moment.duration(this.totalDuration * 1000).days();
-	var hours = moment.duration(this.totalDuration * 1000).hours();
-	var minutes = moment.duration(this.totalDuration * 1000).minutes();
+Route.prototype.calculateDistanceInterval = function() {
+    return Math.min(this.calculateTotalRouteDistance()/20, 5000);
+}
+
+Route.prototype.getTotalDurationText = function() {
+    let totalDuration = this.points.slice(-1)[0].duration;
+    var days = moment.duration(totalDuration * 1000).days();
+	var hours = moment.duration(totalDuration * 1000).hours();
+	var minutes = moment.duration(totalDuration * 1000).minutes();
     var duration_string = 
         (days == 0 ? '' : days + ' day' ) + (days > 1 ? 's ' : ' ') +
 	    (hours == 0 ? '' : hours + ' hr ' ) + 
@@ -44,29 +34,31 @@ Route.prototype.getTotalDuration = function() {
 	return duration_string;
 }
 
-Route.prototype.getTotalDistance = function() {
-    var totalDistance = Math.round(this.totalDistance / 1609.34 * 10) / 10 + ' mi';
+Route.prototype.getTotalDistanceText = function() {
+    let totalRouteDistance = 0;
+    for (const leg of this.directions.legs) {
+        totalRouteDistance += leg.distance.value;
+    }
+    var totalDistance = Math.round(totalRouteDistance / 1609.34 * 10) / 10 + ' mi';
     if (km) {
-        totalDistance = Math.round(this.totalDistance / 1000 * 10) / 10 + ' km';
+        totalDistance = Math.round(totalRouteDistance / 1000 * 10) / 10 + ' km';
     }
     return totalDistance;
-	
 }
 
 Route.prototype.extractIntervalPoints = function() {
-	var route = this.directions;
 
-    var lat_lngA, lat_lngB;
+    var lat_lngA, 
+        lat_lngB,
+        points = [],
+        elapsedDuration = 0,
+        distanceSum = 0,
+        distanceInterval = this.calculateDistanceInterval(),
+        distanceIntervalSum = 0,
+        totalRouteDistance = this.calculateTotalRouteDistance();
+        
 
-    var points = [],
-        duration_sum = 0,
-        duration_interval = 0,
-        distance_sum = 0,
-        distance_interval = this.interval,
-        distance_interval_sum = 0;
-
-
-    lat_lngA = route.legs[0].steps[0].lat_lngs[0];
+    lat_lngA = this.directions.legs[0].steps[0].lat_lngs[0];
     
     // get first data point
     points.push({
@@ -76,65 +68,61 @@ Route.prototype.extractIntervalPoints = function() {
         distance: 0
     });
 
-    for (var i = 0; i < route.legs.length; i++) {
-        var leg = route.legs[i];
+    for (const leg of this.directions.legs) {
 
-        for (var j = 0; j < leg.steps.length; j++) {
-            var step = leg.steps[j];
+        // console.log('leg start');
+        // if (i > 1) {
+        //     duration_sum += 2*60*60;
+        // }
+
+        for (const step of leg.steps) {
             var distance = step.distance.value;
             var duration = step.duration.value;
 
             var speed = 0;
             if (duration !== 0) {
-                speed = distance / duration;
+                speed = (distance / duration) * flex;
             }
 
-
-
-            for (var k = 0; k < step.lat_lngs.length; k++) {
-                
-                lat_lngB = step.lat_lngs[k];
+            for (var lat_lngB of step.lat_lngs) {
                 
                 var coordDistance = google.maps.geometry.spherical.computeDistanceBetween(lat_lngA, lat_lngB);
-                distance_interval_sum += coordDistance;
-                distance_sum += coordDistance;
+                distanceIntervalSum += coordDistance;
+                distanceSum += coordDistance;
                 
                 var coordDuration = Math.round(coordDistance / speed);
-                duration_sum += coordDuration;
+                elapsedDuration += coordDuration;
                 
 
-                if (distance_interval_sum > distance_interval) {
+                if (distanceIntervalSum > distanceInterval) {
 
                 	// if the last interval point is within a half interval of the end of the route, don't add it
-                	if ((this.totalDistance - distance_sum) > this.interval / 2) {
+                	if ((totalRouteDistance - distanceSum) > distanceInterval / 2) {
 
 	                    points.push({
 	                        lat: lat_lngB.lat(),
 	                        lng: lat_lngB.lng(),
-	                        duration: duration_sum,
-	                        distance: distance_sum
+	                        duration: elapsedDuration,
+	                        distance: distanceSum
 	                    });
 
-	                    distance_interval_sum = 0;
+	                    distanceIntervalSum = 0;
                 	}
                 }
 
-                
-
                 lat_lngA = lat_lngB;
             }
-
         }
-
     }
 
     // get last data point
     points.push({
         lat: lat_lngB.lat(),
         lng: lat_lngB.lng(),
-        duration: duration_sum,
-        distance: distance_sum
+        duration: elapsedDuration,
+        distance: distanceSum
     });
 
-    return points;
+    this.points = points;
+
 }

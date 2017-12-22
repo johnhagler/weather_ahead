@@ -1,4 +1,6 @@
-var celcius, km;
+var celcius, km, flex = 1;
+
+var ga = function() {};
 
 $(function(){
 
@@ -59,7 +61,7 @@ $(function(){
   $('.clear-input').click(function(){ga('send', 'event', 'UI', 'Form', 'Clear Input');});
   $('.clear-input').click(clearInput);
 
-
+  $('#speed-flex').on('input', updateFlex);
 
 
 });
