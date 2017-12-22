@@ -42,8 +42,14 @@ table#gradient-numbers {
 }
 table#gradient-numbers td {
     color: white;
-    font-size:16px;
-    text-shadow: -1px -1px 1px #333, 1px -1px 1px #333, -1px 1px 1px #333, 1px 1px 1px #333;
+	font-size:16px;
+	width: 20px;
+	text-align: center;
+	text-shadow: -1px -1px 1px #333, 1px -1px 1px #333, -1px 1px 1px #333, 1px 1px 1px #333;
+}
+
+table#gradient-numbers td::after {
+	content: '°';
 }
 
 

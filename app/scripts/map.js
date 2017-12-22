@@ -361,7 +361,11 @@ function addWeatherMarker(result) {
 		icon.scale = precipIconScale * 1.3;
 	}
 
-	var current_temp = Math.round(result.currently.temperature );
+    var current_temp = result.currently.temperature;
+    if (celcius) {
+        current_temp = (current_temp - 32) * (5/9); 
+    }
+	var current_temp = Math.round(current_temp);
 
 	
 	var lat_lng = {lat: result.latitude, lng: result.longitude};

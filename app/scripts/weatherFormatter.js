@@ -51,7 +51,7 @@ ForecastIO.prototype.getWind = function() {
 
 
 ForecastIO.prototype.getClouds = function() {
-	if (this.data.temperature) {
+	if (this.data.cloudCover) {
 		return Math.round(this.data.cloudCover * 100) + '%';
 	} else {
 		return '';
@@ -60,7 +60,11 @@ ForecastIO.prototype.getClouds = function() {
 
 ForecastIO.prototype.getTemperature = function() {
 	if (this.data.temperature) {
-		return Math.round(this.data.temperature) + '°';
+		if (celcius) {
+			var temp = this.data.temperature;
+			temp = (temp - 32) * (5/9);
+		}
+		return Math.round(temp) + '°';
 	} else {
 		return '';
 	}

@@ -1,3 +1,5 @@
+var celcius, km;
+
 $(function(){
 
   if (!navigator.onLine) {
@@ -21,6 +23,24 @@ $(function(){
     ga('send', 'event', 'Location', 'End', $('#end').val());
 
   });
+
+  $('#useC').change(function(){
+    celcius = $('#useC').is(':checked');
+    var tempsF = [ 10,  20, 30, 40,  50, 60, 70, 80, 90];
+    var tempsC = [-12, -6,  -1,  4,  10, 15, 21, 26, 32];
+    var tempsArr = tempsF;
+    if (celcius) {
+      tempsArr = tempsC;
+    }     
+    $('#gradient-numbers td').each(function(i, el){
+        $(el).html(tempsArr[i]);
+    });
+
+  });
+  $('#useKm').change(function(){
+    km = $('#useKm').is(':checked');
+  });
+
   $('#search-form').submit(submitSearchForm);
 
   $('#add-hour').click(function(){ga('send', 'event', 'UI', 'Time', 'Add Hour');});
