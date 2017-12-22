@@ -68,6 +68,22 @@ function showCurrentPositionMap(position) {
         if (status === google.maps.GeocoderStatus.OK && results.length > 0) {
         	var location = LocationUtil.getLocation(results);
           $('#start').val(location);
+
+          var country = LocationUtil.getCountry(results);
+          if (country == 'United States') {
+              $('#useC').prop('checked', false);
+          } else {
+            $('#useC').prop('checked', true);
+          }
+          $('#useC').change();
+
+          if (country == 'United States' || country == 'United Kingdom') {
+            $('#useKm').prop('checked', false);
+          } else {
+            $('#useKm').prop('checked', true);
+          }
+          $('#useKm').change();
+
           geocodedLocation = lat_lng;
           geocodedLocation.location = location;
 

@@ -36,3 +36,11 @@ LocationUtil.getState = function (addressResults) {
         }
     }
 }
+
+LocationUtil.getCountry = function (addressResults) {
+    for (var i = 0; i < addressResults.length; i++) {
+        if (addressResults[i].types[0] == 'country') {
+            return addressResults[i].formatted_address;
+        }
+    }
+}
