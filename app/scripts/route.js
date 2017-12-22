@@ -34,9 +34,11 @@ Route.prototype.calculateTotals = function() {
 }
 
 Route.prototype.getTotalDuration = function() {
+    var days = moment.duration(this.totalDuration * 1000).days();
 	var hours = moment.duration(this.totalDuration * 1000).hours();
 	var minutes = moment.duration(this.totalDuration * 1000).minutes();
-	var duration_string = 
+    var duration_string = 
+        (days == 0 ? '' : days + ' day' ) + (days > 1 ? 's ' : ' ') +
 	    (hours == 0 ? '' : hours + ' hr ' ) + 
 	    (minutes == 0 ? '' : minutes + ' min');
 	return duration_string;
